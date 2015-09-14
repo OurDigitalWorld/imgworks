@@ -51,15 +51,16 @@ the starting coordinates of the rectangle that will be extracted. This
 leads to URLs that look like this (the search query here is _town_):
 
 ```
-* _img_ - http://mysite.org/ImgWorks/imghl/img/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
-* _json_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
-* _cut_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400?x=200&y=300
+* img - http://mysite.org/ImgWorks/imghl/img/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
+* json - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
+* cut - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400?x=200&y=300
 ```
 
 The business logic is contained in 
 [module/ImgHl/src/ImgHl/Controller/ImgHlController.php] (https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/src/ImgHl/Controller/ImgHlController.php). 
 The flow is fairly straightforward, it would be worth exploring some
 different approaches to identifying the best _cluster_ for showing
-highlights on an image but it's a simply count of the most stems for now.
+highlights on an image but it's a simple count to determine the most stems 
+for now.
 
 art rhyno [ourdigitalworld/u. of windsor] (https://github.com/artunit)
