@@ -38,11 +38,9 @@ The layout of the application is largely defined in
 There are current three outputs from the application based on three
 actions:
 
-```
 * _img_ - highlight search terms on specified region of image
 * _json_ - return coordinates in json for search terms in specified region
 * _cut_ - extract specified region of image
-```
 
 The URL pattens all use _action_/_site_/_collection_/_reel_/_page_/_w_/_h_
 but vary slightly depending on whether a query is being processed (_img_
@@ -50,17 +48,24 @@ and _json_). The _cut_ action uses _x_ and _y_ parameters for specifying
 the starting coordinates of the rectangle that will be extracted. This
 leads to URLs that look like this (the search query here is _town_):
 
-```
-* img - http://mysite.org/ImgWorks/imghl/img/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
-* json - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
-* cut - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400?x=200&y=300
-```
+* _img_ - http://mysite.org/ImgWorks/imghl/img/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
+* _json_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
+* _cut_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400?x=200&y=300
+
+The _action_ is specified after the _route_ (imghl), and in these examples:
+
+*_site_ - ink
+* _collection_ - newspapers
+* _reel_ - 03_1871 (reflecting our newspaper focus, a _reel_ is equivalent to a set
+* _page_ - BM-1871-03-24-03 (this is the image name)
+* _600_ - width (of resulting image)
+* _400_ - height (of resulting image)
 
 The business logic is contained in 
 [module/ImgHl/src/ImgHl/Controller/ImgHlController.php] (https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/src/ImgHl/Controller/ImgHlController.php). 
 The flow is fairly straightforward, it would be worth exploring some
 different approaches to identifying the best _cluster_ for showing
 highlights on an image but it's a simple count to determine the most stems 
-for now.
+in a region for now.
 
 art rhyno [ourdigitalworld/u. of windsor] (https://github.com/artunit)
