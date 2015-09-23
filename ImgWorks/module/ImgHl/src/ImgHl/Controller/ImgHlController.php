@@ -82,6 +82,12 @@ class ImgHlController extends AbstractActionController {
         }
         $indLoc = $resLoc . 'index/imgworks';
 
+        //need index directory and segments file to be valid lucene layout
+        if (!file_exists($indLoc . '/segments.gen')) {
+            return array("imgloc" => $imgLoc, "indloc" => $indLoc, 
+                "coords" => $coords,);
+        }
+
         //get coordinates from Lucene index
         $searchText = '';
         //use Lucene tokens for searching
