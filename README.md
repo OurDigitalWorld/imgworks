@@ -56,8 +56,8 @@ source image are passed in. This leads to URLs that look like this:
 
 * _img_ - http://mysite.org/ImgWorks/imghl/img/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
 * _json_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
-* _cut_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400?x=200&y=300
-* _ol_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/3000/6000
+* _cut_ - http://mysite.org/ImgWorks/imghl/cut/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400?x=200&y=300
+* _ol_ - http://mysite.org/ImgWorks/imghl/ol/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/3000/6000
 
 The _action_ is specified after the _route_ (imghl), and in these examples:
 
