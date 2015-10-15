@@ -39,22 +39,25 @@ The needed pieces will hopefully fall into place.
 
 The layout of the application is largely defined in
 [ImgWorks/module/ImgHl/config/module.config.php] (https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/config/module.config.php).
-There are current three outputs from the application based on three
+There are current four outputs from the application based on four
 actions:
 
 * _img_ - highlight search terms on specified region of image
 * _json_ - return coordinates in json for search terms in specified region
 * _cut_ - extract specified region of image
+* _ol_ - provide tiles in response to OpenLayers 3.x requests
 
 The URL pattens all use _action_/_site_/_collection_/_reel_/_page_/_w_/_h_
 but vary slightly depending on whether a query is being processed (_img_
 and _json_). The _cut_ action uses _x_ and _y_ parameters for specifying
-the starting coordinates of the rectangle that will be extracted. This
-leads to URLs that look like this:
+the starting coordinates of the rectangle that will be extracted. The
+OpenLayers tiles are typically 256x256 but here the height and width of the
+source image are passed in. This leads to URLs that look like this:
 
 * _img_ - http://mysite.org/ImgWorks/imghl/img/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
 * _json_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400/town
 * _cut_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/600/400?x=200&y=300
+* _ol_ - http://mysite.org/ImgWorks/imghl/json/ink/newspapers/bmerchant/03_1871/BM-1871-03-24-03/3000/6000
 
 The _action_ is specified after the _route_ (imghl), and in these examples:
 
@@ -64,7 +67,9 @@ The _action_ is specified after the _route_ (imghl), and in these examples:
 * _page_ - BM-1871-03-24-03 (this is the image name)
 * _600_ - width (of resulting image)
 * _400_ - height (of resulting image)
-* _town_ - query (not used for _cut_, the terms are extracted and stemmed to determine highlights)
+* _3000_ - width (of source image - OpenLayers only)
+* _6000_ - height (of source image - OpenLayers only)
+* _town_ - query (not used for _cut_ or _ol_, the terms are extracted and stemmed to determine highlights)
 
 The business logic is contained in 
 [module/ImgHl/src/ImgHl/Controller/ImgHlController.php] (https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/src/ImgHl/Controller/ImgHlController.php). 

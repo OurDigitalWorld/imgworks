@@ -29,6 +29,8 @@ class ImgHlController extends AbstractActionController {
         $resLoc = $config['module_config']['asset_location'];
 
         return array("resLoc" => $config['module_config']['asset_location'],
+            "tileUrl" => $config['module_config']['tile_url'],
+            "blankUrl" => $config['module_config']['blank_url'],
             "site" => $this->params()->fromRoute('site', 'ink'),
             "collection" => $this->params()->fromRoute('collection', 'newspapers'),
             "container" => $this->params()->fromRoute('container', 'efp'),
@@ -444,6 +446,110 @@ class ImgHlController extends AbstractActionController {
     }//jsonAction
 
     /*
+        olAction() - openlayers support 
+    */
+    public function olAction()
+    {
+
+        $config = $this->getServiceLocator()->get('config');
+        $paramInfo = $this->sortOutParams($config);
+        $redirectUrl = $paramInfo['blankUrl'];
+        $test = $this->getRequest();
+        $bbox = $this->params()->fromQuery('BBOX','0,0,0,0');
+        $coords = explode(',', $bbox);
+
+        $w = intval($this->params()->fromRoute('w', '0'));
+        $h = intval($this->params()->fromRoute('h', '0'));
+
+        //images are padded to contain 256x256 blocks
+        $floorX = floor($w/256);
+        $floorY = floor($h/256);
+        $adjW = ($floorX + 1) * 256;
+        $adjH = ($floorY + 1) * 256; 
+
+        $canvasSize = 4096;
+        while ($adjW > $canvasSize || $adjH > $canvasSize) {
+            $canvasSize += 4096;
+        }//while
+
+        $x1 = intval($coords[0]);
+        $y1 = intval($coords[1]);
+        $x2 = intval($coords[2]);
+        $y2 = intval($coords[3]);
+
+	$relSize = abs($x2 - $x1);
+
+        //adjust y2
+        $y2 = abs($canvasSize - $y2);		
+
+        //for ZOOM IN requests we go dynamic (small overhead)
+        if ($relSize < 256) {
+
+            //determine which tile holds region
+            $factorX = floor($x1/256);
+            $factorY = floor($y2/256);
+            $baseX = $factorX * 256;
+            $baseY = $factorY * 256;
+
+            //make sure the coordinates are less than width & height of image
+            if (($baseX + $relSize) <= $adjW && ($baseY + $relSize) <= $adjH) {
+                //now figure out where to start in tile
+                $factorX = $x1 - $baseX;
+                $factorY = $y2 - $baseY;
+
+                $src = imagecreatefromjpeg($paramInfo['tileUrl'] .  $paramInfo['collection'] . '/' .
+                    $paramInfo['site'] . '/' .
+                    $paramInfo['container'] . '/' . $paramInfo['reel'] . '/odw/' .
+                    $paramInfo['page'] . '/tiles/256/' . $paramInfo['page'] .
+                    '_x' . $baseX . '_y' . $baseY . '.jpg');
+                $tile = imagecreatetruecolor(256,256);
+                if (isset($src) && imagecopyresized ($tile,$src,0,0,$factorX,$factorY,256,256,$relSize,$relSize)) {
+                    $redirectUrl = 'draw';
+                }//if
+                if (isset($src)) {
+                    imagedestroy($src);
+                }//if
+            } //if
+
+        }//if abs
+
+        //ZOOM OUTs have their own tiles, too cpu-intensive to combine them for small sizes
+        if ($relSize == 512 || $relSize == 1024 || $relSize == 2048 || $relSize == 4096) {
+            $redirectUrl = $paramInfo['tileUrl'] .  $paramInfo['collection'] . '/' .
+                $paramInfo['site'] . '/' .
+                $paramInfo['container'] . '/' . $paramInfo['reel'] . '/odw/' .
+                $paramInfo['page'] . '/tiles/' . $relSize . '/' . $paramInfo['page'] .
+                '_x' . $x1 . '_y' . $y2 . '.jpg';
+        }//if
+ 
+
+        //DEFAULT view
+        if ($x2 <= $adjW && $y2 <= $adjH && $relSize == 256) {
+            $redirectUrl = $paramInfo['tileUrl'] .  $paramInfo['collection'] . '/' .
+                $paramInfo['site'] . '/' .
+                $paramInfo['container'] . '/' . $paramInfo['reel'] . '/odw/' .
+                $paramInfo['page'] . '/tiles/256/' . $paramInfo['page'] .
+                '_x' . $x1 . '_y' . $y2 . '.jpg';
+        }//if
+
+
+        $response = FALSE;
+        if (substr( $redirectUrl, 0, 7 ) === "http://") {
+            $this->plugin('redirect')->toUrl($redirectUrl);
+        }//if 
+        if (isset($tile)) {
+            //set headers
+            header("Content-Type: image/jpeg");
+            //could also adjust quality here
+            imagejpeg($tile);
+            // free memory used
+            imagedestroy($tile);
+        }//if
+
+        return $response;
+    }//olAction
+
+    /*
         cutAction() - extract region of image
     */
     public function cutAction()
@@ -479,6 +585,7 @@ class ImgHlController extends AbstractActionController {
                 $container . '/' . $reel . '/odw/' . $page . '/'); 
             $imgLoc = $resLoc . '../../' . $page . '.jpg';
             $iaLoc = $resLoc . 'ia/' . $page . '.jpg';
+
             //not all images will have IA derivative
             if (file_exists($iaLoc) !== false) {
                 $imgLoc = $iaLoc;
@@ -513,7 +620,7 @@ class ImgHlController extends AbstractActionController {
         $testText = '<pre>test</pre>';
 
         $response = $this->getResponse();
-        $response->setContent($testText);
+        $response->setContent($redirectUrl);
         $response
             ->getHeaders()
             ->addHeaderLine('Content-Type', 'text/html')

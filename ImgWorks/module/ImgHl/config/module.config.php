@@ -3,6 +3,8 @@ return array(
     'module_config' => array(
         'asset_location' =>  __DIR__ . '/../res',
         'fallback_location' =>  __DIR__ . '/../res/fallback.jpg',
+        'tile_url' =>  'http://tiles.myorg.org/',
+        'blank_url' =>  'http://tiles.myorg.org/blank.jpg',
     ),
     'controllers' => array(
         'invokables' => array(
