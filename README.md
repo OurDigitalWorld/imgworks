@@ -1,20 +1,20 @@
 ImgWorks
 ========
 
-[Zend] (http://framework.zend.com/) is a well known Framework for PHP and 
+[Zend](http://framework.zend.com/) is a well known Framework for PHP and 
 generally  fits well into any Drupal-friendly environment. 
-[ODW] (http://ourdigitalworld.org/) has some legacy 
-[Cocoon] (http://cocoon.apache.org/) applications that provide java-based 
+[ODW](http://ourdigitalworld.org/) has some legacy 
+[Cocoon](http://cocoon.apache.org/) applications that provide java-based 
 image manipulations, including extracting and
 highlighting images. In our current operating environment, the java
 approach is not ideal. Although there are options to integrate Zend
 directly into Drupal, it adds to the complexity of the Drupal installation
 and our preference is to keep the application standalone at this point.
 
-The use of Zend taps into the [GD graphics library] (http://libgd.github.io/)
+The use of Zend taps into the [GD graphics library](http://libgd.github.io/)
 via PHP, an efficient option in our environment. Still, GD doesn't require 
 Zend, where it becomes necessary is for a 
-[native implementation of Lucene] (https://github.com/zendframework/ZendSearch). 
+[native implementation of Lucene](https://github.com/zendframework/ZendSearch). 
 Highlights are placed on images based on coordinates stored in a 
 Lucene index and the solution
 needs to be able to invoke Lucene queries efficiently. Although the Zend 
@@ -38,7 +38,7 @@ curl -s https://getcomposer.org/installer | php
 The needed pieces will hopefully fall into place.
 
 The layout of the application is largely defined in
-[ImgWorks/module/ImgHl/config/module.config.php] (https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/config/module.config.php).
+[ImgWorks/module/ImgHl/config/module.config.php](https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/config/module.config.php).
 There are current four outputs from the application based on four
 actions:
 
@@ -72,10 +72,10 @@ The _action_ is specified after the _route_ (imghl), and in these examples:
 * _town_ - query (not used for _cut_ or _ol_, the terms are extracted and stemmed to determine highlights)
 
 The business logic is contained in 
-[module/ImgHl/src/ImgHl/Controller/ImgHlController.php] (https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/src/ImgHl/Controller/ImgHlController.php). 
+[module/ImgHl/src/ImgHl/Controller/ImgHlController.php](https://github.com/OurDigitalWorld/imgworks/blob/master/ImgWorks/module/ImgHl/src/ImgHl/Controller/ImgHlController.php). 
 The flow is fairly straightforward, it would be worth exploring some
 different approaches to identifying the best _cluster_ for showing
 highlights on an image but it's a simple count to determine the most stems 
 in a region for now.
 
-art rhyno [ourdigitalworld/cdigs] (https://github.com/artunit)
+art rhyno [ourdigitalworld/cdigs](https://github.com/artunit)
